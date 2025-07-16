@@ -2,6 +2,7 @@ import streamlit as st
 import datetime
 import importlib
 import base64
+from streamlit_javascript import st_javascript
 
 # Function to encode image to base64
 def get_base64_image(image_path):
@@ -65,7 +66,15 @@ def get_time_colors(hour):
             'text_color': 'white'
         }
 
-colors = get_time_colors(current_time)
+# Get user's local hour via JS
+local_hour = st_javascript("""new Date().getHours();""")
+
+# Fallback to UTC if JS not supported
+if local_hour is None:
+    local_hour = datetime.datetime.utcnow().hour
+
+# Your color logic
+colors = get_time_colors(local_hour)
 
 # Get base64 encoded image
 image_base64 = get_base64_image("assets/narrative_web_clean.png")

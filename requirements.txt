@@ -51,3 +51,4 @@ tzdata==2025.2
 urllib3==2.5.0
 wheel==0.45.1
 xyzservices==2025.4.0
+streamlit-javascript==0.1.5
