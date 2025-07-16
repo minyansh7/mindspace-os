@@ -79,9 +79,9 @@ def create_sankey_custom(df):
         top_topic = theme_data.loc[theme_data['count'].idxmax(), 'cluster_name'] if not theme_data.empty else "N/A"
 
         hover_text = (
-            f"<b style='font-size: 16px; color: #2c3e50'>🎯 {theme}</b><br>"
-            f"📊 Total: <b>{format_number(theme_count)}</b><br>"
-            f"📈 Global Share: <b>{percentage:.1f}%</b><br>"
+            f"<b style='font-size: 16px; color: #2c3e50'> {theme}</b><br>"
+            f" Total: <b>{format_number(theme_count)}</b><br>"
+            f" Global Share: <b>{percentage:.1f}%</b><br>"
         )
         theme_hover_text.append(hover_text)
 
@@ -95,12 +95,12 @@ def create_sankey_custom(df):
         percentage = (topic_count / total_discussions) * 100
 
         hover_text = (
-            f"<b style='font-size: 16px; color: #2c3e50'>💡 {topic}</b><br>"
-            f"🗣️ Mentions: <b>{format_number(topic_count)}</b><br>"
-            f"📊 Global Share: <b>{percentage:.1f}%</b><br>"
-            f"🎯 Primary Theme: <b>{primary_theme}</b><br>"
-            f"🔥 Top Count: <b>{format_number(primary_count)}</b><br>"
-            f"🌐 Themes: <b>{connected_themes}</b>"
+            f"<b style='font-size: 16px; color: #2c3e50'> {topic}</b><br>"
+            f" Mentions: <b>{format_number(topic_count)}</b><br>"
+            f" Global Share: <b>{percentage:.1f}%</b><br>"
+            f" Primary Theme: <b>{primary_theme}</b><br>"
+            f" Top Count: <b>{format_number(primary_count)}</b><br>"
+            f" Themes: <b>{connected_themes}</b>"
         )
         topic_hover_text.append(hover_text)
 
@@ -120,9 +120,9 @@ def create_sankey_custom(df):
 
         link_hover = (
             f"<b style='font-size: 15px; color: #2c3e50'>{r['theme']} → {r['cluster_name']}</b><br>"
-            f"📉 Count: <b>{format_number(r['count'])}</b><br>"
-            f"📈 Global Share: <b>{flow_percentage:.1f}%</b><br>"
-            f"💡 Topic Share: <b>{topic_contribution:.1f}%</b>"
+            f" Count: <b>{format_number(r['count'])}</b><br>"
+            f" Global Share: <b>{flow_percentage:.1f}%</b><br>"
+            f" Topic Share: <b>{topic_contribution:.1f}%</b>"
         )
         link_hover_text.append(link_hover)
 
