@@ -525,13 +525,6 @@ def run():
                 
                 const config = {{
                     displayModeBar: true,
-                    toImageButtonOptions: {{
-                        format: 'png',
-                        filename: 'emotion_pulse',
-                        height: currentLayout.height,
-                        width: Math.min(1200, window.innerWidth),
-                        scale: 2
-                    }},
                     modeBarButtonsToRemove: [
                         'pan2d', 
                         'lasso2d', 
@@ -542,6 +535,8 @@ def run():
                         'autoScale2d',
                         'resetScale2d'
                     ],
+                    modeBarButtonsToAdd: ['toImage'],
+                    displaylogo: false,
                     scrollZoom: false,
                     doubleClick: false,
                     responsive: true
