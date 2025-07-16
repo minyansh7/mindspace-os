@@ -1,0 +1,37 @@
+# Create .gitignore file (if you haven't already)
+cat > .gitignore << 'EOF'
+# Virtual Environment
+meditation-env/
+env/
+venv/
+.env
+.venv/
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+
+# Database Files
+*.duckdb
+*.db
+*.sqlite
+reddit_progress.duckdb
+
+# IDE Files
+.vscode/
+.idea/
+*.swp
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Streamlit Secrets
+.streamlit/secrets.toml
+EOF
