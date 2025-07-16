@@ -257,7 +257,7 @@ def run():
         transform: translateX(-50%) !important;
         color: #262730 !important;
         font-family: 'DM Sans', sans-serif !important;
-        font-size: 11px !important;
+        font-size: 12px !important;
         font-weight: 600 !important;
         white-space: nowrap !important;
         background: rgba(255, 255, 255, 0.9) !important;
@@ -275,7 +275,7 @@ def run():
         
         color: #262730 !important;
         font-family: 'DM Sans', sans-serif !important;
-        font-size: 10px !important;
+        font-size: 12px !important;
         font-weight: 700 !important;
         text-align: center !important;
         
@@ -344,12 +344,12 @@ def run():
         
         .stSidebar .stRadio::before {{
             left: 2% !important;
-            font-size: 12px !important;
+            font-size: 14px !important;
         }}
         
         .stSidebar .stRadio::after {{
             right: 2% !important;
-            font-size: 12px !important;
+            font-size: 14px !important;
         }}
         
         .stSidebar .stRadio > div > label {{
