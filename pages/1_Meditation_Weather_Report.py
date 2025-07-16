@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import datetime
 import json
+from streamlit_javascript import st_javascript
 
 def get_time_colors(hour):
     if 5 <= hour < 8:
@@ -19,7 +20,16 @@ def get_time_colors(hour):
 
 def run():
     st.set_page_config(page_title="🌦️ Meditation Weather Map", layout="wide")
-    colors = get_time_colors(datetime.datetime.now().hour)
+
+        # Get user's local hour via JS
+    local_hour = st_javascript("""new Date().getHours();""")
+
+    # Fallback to UTC if JS not supported
+    if local_hour is None:
+        local_hour = datetime.datetime.utcnow().hour
+
+    # Your color logic
+    colors = get_time_colors(local_hour)
 
     # Enhanced Global Styling
     st.markdown(f"""
