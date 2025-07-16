@@ -344,12 +344,12 @@ def run():
         
         .stSidebar .stRadio::before {{
             left: 2% !important;
-            font-size: 10px !important;
+            font-size: 12px !important;
         }}
         
         .stSidebar .stRadio::after {{
             right: 2% !important;
-            font-size: 10px !important;
+            font-size: 12px !important;
         }}
         
         .stSidebar .stRadio > div > label {{
