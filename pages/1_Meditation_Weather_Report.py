@@ -205,7 +205,7 @@ def run():
         left: 8px !important;
         color: #262730 !important;   
         font-family: 'DM Sans', sans-serif !important;
-        font-size: 7px !important;
+        font-size: 12px !important;
         font-weight: 400 !important;
         z-index: 10 !important;
     }}
@@ -218,7 +218,7 @@ def run():
         right: 8px !important;
         color: #262730 !important;
         font-family: 'DM Sans', sans-serif !important;
-        font-size: 7px !important;
+        font-size: 12px !important;
         font-weight: 400 !important;
         z-index: 10 !important;
     }}
@@ -257,7 +257,7 @@ def run():
         transform: translateX(-50%) !important;
         color: #262730 !important;
         font-family: 'DM Sans', sans-serif !important;
-        font-size: 7px !important;
+        font-size: 11px !important;
         font-weight: 600 !important;
         white-space: nowrap !important;
         background: rgba(255, 255, 255, 0.9) !important;
@@ -344,12 +344,12 @@ def run():
         
         .stSidebar .stRadio::before {{
             left: 2% !important;
-            font-size: 8px !important;
+            font-size: 10px !important;
         }}
         
         .stSidebar .stRadio::after {{
             right: 2% !important;
-            font-size: 8px !important;
+            font-size: 10px !important;
         }}
         
         .stSidebar .stRadio > div > label {{
