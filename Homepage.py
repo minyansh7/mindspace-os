@@ -391,9 +391,9 @@ st.markdown(f"""
             <div class="theme-title">Emotional Pulse</div>
         </div>
     </a>
-    <a href="/Meditation_Weather_Report" style="text-decoration: none; display: block;">
+    <a href="/Sentiment_Weather" style="text-decoration: none; display: block;">
         <div class="theme-card">
-            <div class="theme-title">Weather Report</div>
+            <div class="theme-title">Sentiment Weather</div>
         </div>
     </a>
     <a href="/Main_Topics" style="text-decoration: none; display: block;">
@@ -434,7 +434,7 @@ if page == "Emotion_Pulse_v":
     module = importlib.import_module("pages.0_Emotion_Pulse")
     module.run()
 elif page == "Meditation_Weather_report":
-    module = importlib.import_module("pages.1_Meditation_Weather_Report")
+    module = importlib.import_module("pages.1_Sentiment_Weather")
     module.run()
 elif page == "Main_Topics":
     module = importlib.import_module("pages.2_Main_Topics")
