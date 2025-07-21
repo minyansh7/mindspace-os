@@ -156,7 +156,8 @@ def run():
                 <p style="font-size: 16px; color: #718096; margin: 0; line-height: 1.8; font-weight: 300; opacity: 0.9;">
                     <strong>Each point</strong> marks a message shared on Reddit about meditation.<br>
                     <strong>Color</strong> reflects the emotional pulses uncovered for each.
-                       <br> 
+                    <br><b><span style="text-decoration: underline; text-decoration-color: #ffc300; text-decoration-thickness: 3px;">Hover over</span></b> to find out more 🔍
+                    <br> 
                 </p>
             </div>
         </div>
