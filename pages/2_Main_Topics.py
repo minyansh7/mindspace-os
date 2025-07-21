@@ -247,7 +247,7 @@ def run():
         <h1 style="font-size: 3rem; font-weight: 800;">💫 Main Topics</h1>
         <h3 style="font-size: 1.5rem; font-weight: 500;">What People Say Most</h3>
         <p style="font-size: 1rem; color: #888; max-width: 800px; margin: auto;">
-            This diagram shows main topics within meditation space, and underlying themes flowing into each topic.
+            This diagram shows main topics within meditation space, and underlying themes flowing into each topic through January 2024 to June 2025.
         </p>
     </div>
     """, unsafe_allow_html=True)

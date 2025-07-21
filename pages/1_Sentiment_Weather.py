@@ -19,7 +19,7 @@ def get_time_colors(hour):
         return {'primary': '#6C5CE7', 'secondary': '#2D3436', 'bg_gradient': 'linear-gradient(135deg, #6C5CE7 0%, #2D3436 100%)', 'ripple_color': 'rgba(108, 92, 231, 0.3)', 'text_color': 'white'}
 
 def run():
-    st.set_page_config(page_title="🌦️ Meditation Weather Map", layout="wide")
+    st.set_page_config(page_title="🌦️ Sentiment Weather Map", layout="wide")
 
         # Get user's local hour via JS
     local_hour = st_javascript("""new Date().getHours();""")
@@ -574,10 +574,10 @@ def run():
     st.markdown("""
     <div style="text-align: center; color: white; margin-bottom: 2rem;">
         <h1 style="font-size: 3rem; font-weight: 800; background: linear-gradient(45deg, #ffd700, #ff6b6b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-            🌦️ Meditation Weather Map</h1>
+            🌦️ Sentiment Weather Map</h1>
         <h3 style="font-size: 1.5rem; font-weight: 500; color:#333">How people feel</h3>
         <p style="font-size: 1rem; color: #888; max-width: 800px; margin: auto;">
-            This weather map shows how people's sentiment change over time across topics of meditations.
+            This weather map shows how people's sentiment change over time across topics of meditations on Reddit through January 2024 to June 2025.
         </p>
     </div>
     """, unsafe_allow_html=True)
