@@ -247,7 +247,7 @@ def run():
         <h1 style="font-size: 3rem; font-weight: 800;">💫 Main Topics</h1>
         <h3 style="font-size: 1.5rem; font-weight: 500;">What People Say Most</h3>
         <p style="font-size: 1rem; color: #888; max-width: 800px; margin: auto;">
-            This Sankey diagram blends top flowing themes into topic families using harmonious colors for clarity and beauty.
+            This diagram shows main topics within meditation space, and underlying themes flowing into each topic.
         </p>
     </div>
     """, unsafe_allow_html=True)
