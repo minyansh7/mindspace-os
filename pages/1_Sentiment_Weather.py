@@ -578,7 +578,8 @@ def run():
         <h3 style="font-size: 1.5rem; font-weight: 500; color:#333">How people feel</h3>
         <p style="font-size: 1rem; color: #888; max-width: 800px; margin: auto;">
             This weather map shows how people's sentiment change over time across topics of meditations on Reddit through January 2024 to June 2025.
-        </p>
+        </p><br>
+        <span style="color: #4A5568; padding-bottom: 1px; text-decoration: underline; text-decoration-color: #ffc300; text-decoration-thickness: 3px;"><strong>Hover Over</strong></span> <span style="color: #4A5568">to find out more 🔍</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1169,7 +1170,7 @@ def run():
                 </div>
                 <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.2); font-size: 9px; color: #ffffff;">
                     📅 <strong>{selected_quarter}</strong><br>
-                    <em><strong>Region Size = Discussion Volume</strong><br><strong>>>Hover for more details</strong></em><br>
+                    <em><strong>Region Size = Discussion Volume</strong><br>
                 </div>
             </div>
         </div>

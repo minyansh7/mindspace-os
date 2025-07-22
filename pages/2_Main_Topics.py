@@ -248,7 +248,8 @@ def run():
         <h3 style="font-size: 1.5rem; font-weight: 500;">What People Say Most</h3>
         <p style="font-size: 1rem; color: #888; max-width: 800px; margin: auto;">
             This diagram shows main topics within meditation space, and underlying themes flowing into each topic through January 2024 to June 2025.
-        </p>
+        </p><br>
+         <span style="color: #4A5568; padding-bottom: 1px; text-decoration: underline; text-decoration-color: #ffc300; text-decoration-thickness: 3px;"><strong>Hover Over</strong></span> to find out more 🔍
     </div>
     """, unsafe_allow_html=True)
     

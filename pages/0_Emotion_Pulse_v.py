@@ -190,7 +190,7 @@ def run():
     }
 
     # Define the 12 emotion dimensions
-    emotion_dimensions = [ 'desire', 'confusion', 'annoyance', 'nervousness',  'disapproval','fear', 'sadness','relief','gratitude', 'joy','caring', 'curiosity']
+    emotion_dimensions = [ 'curiosity', 'confusion', 'annoyance', 'nervousness',  'disapproval','fear', 'sadness','relief','desire','gratitude', 'joy', 'caring']
 
     # Prepare data for JavaScript - include 12-dimension emotion scores
     plot_data = []
