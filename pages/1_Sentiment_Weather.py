@@ -416,9 +416,9 @@ def run():
         else: return "Alarming"
 
     def get_trend_description(sentiment):
-        if sentiment > 0.5: return "Thriving Community"
-        elif sentiment > 0: return "Growing Positivity"
-        elif sentiment > -0.5: return "Stable Discussions"
+        if sentiment > 0.4: return "Thriving Community"
+        elif sentiment > 0.3: return "Growing Positivity"
+        elif sentiment > 0.2: return "Need Support"
         else: return "Needs Support"
 
     # --- Enhanced Data Processing ---

@@ -216,7 +216,7 @@ def create_sankey_custom(df):
     fig.update_layout(
         height=900,
         margin=dict(t=60, b=20, l=30, r=30),
-        title="💫 Themes → Topics Flow",
+        title="Themes → Topics Flow",
         plot_bgcolor="white",
         paper_bgcolor="white",
         font=dict(family="DM Sans, sans-serif", size=16, color="#333"),
