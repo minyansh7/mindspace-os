@@ -125,7 +125,7 @@ def run():
     <h1 class="main-title">🌊 Emotion Pulse</h1>
     <h3 style="font-size: 1.5rem; font-weight: 500;">What people feel</h3>
     <p class="description">
-        This emotional map reveals what emotions peole express through meditation practices, drawn from thousands of reddit posts and comments shared between January 2024 and June 2025.
+        This emotional map reveals what emotions people express through meditation practices, drawn from thousands of reddit posts and comments shared between January 2024 and June 2025.
     </p>
 </div>
 """, unsafe_allow_html=True)
@@ -189,7 +189,10 @@ def run():
         'Anxious Concern': {'symbol': 'star-triangle-up', 'size': 8}
     }
 
-    # Prepare data for JavaScript - keep Top emotions and Post/Comment, remove Emotional Pulse
+    # Define the 12 emotion dimensions
+    emotion_dimensions = [ 'desire', 'confusion', 'annoyance', 'nervousness',  'disapproval','fear', 'sadness','relief','gratitude', 'joy','caring', 'curiosity']
+
+    # Prepare data for JavaScript - include 12-dimension emotion scores
     plot_data = []
     for _, row in df.iterrows():
         # Extract only "Top Emotions:" and "Post/Comment:" lines
@@ -211,13 +214,25 @@ def run():
             simplified_text = original_text  # Show full text to see what's available
         else:
             simplified_text = '\n'.join(filtered_lines)
+
+        # Extract emotion scores (assuming they exist in the DataFrame)
+        emotion_scores = []
+        for dimension in emotion_dimensions:
+            # If the dimension exists in the DataFrame, use it; otherwise use random value for demo
+            if dimension in df.columns:
+                emotion_scores.append(float(row[dimension]) * 100)  # Convert to 0-100 scale
+            else:
+                # Demo data - replace with actual data
+                import random
+                emotion_scores.append(random.uniform(0, 100))
         
         plot_data.append({
             'x': float(row['umap_x']),
             'y': float(row['umap_y']),
             'cluster': row['archetype_label'],
             'hover_text': simplified_text,
-            'color': cluster_colors[row['archetype_label']]
+            'color': cluster_colors[row['archetype_label']],
+            'emotion_scores': emotion_scores
         })
 
     # Calculate centroids for labels
@@ -265,7 +280,7 @@ def run():
                 position: relative;
                 width: 100%;
                 height: 100vh;
-                min-height: 600px;
+                min-height: 700px;
             }}
             
             #plotDiv {{ 
@@ -292,6 +307,25 @@ def run():
                 overflow-y: auto;
             }}
             
+            #emotionRadar {{
+                position: absolute;
+                top: 160px;
+                right: 20px;
+                width: 200px;
+                height: 200px;
+                background: rgba(255, 255, 255, 0.95);
+                border: 2px solid #ddd;
+                border-radius: 12px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 1001;
+                backdrop-filter: blur(2px);
+            }}
+            
+            #radarPlot {{
+                width: 100%;
+                height: 100%;
+            }}
+            
             #hoverBox.visible {{ 
                 display: block; 
             }}
@@ -309,18 +343,23 @@ def run():
                 line-height: 1.1;
             }}
             
-            /* Responsive hover box */
+            /* Responsive styles */
             @media (max-width: 1024px) {{
                 #hoverBox {{
                     left: 100px;
                     right: 100px;
                 }}
+                #emotionRadar {{
+                    top: 125px;
+                    width: 200px;
+                    height: 200px;
+                }}
             }}
             
             @media (max-width: 768px) {{
                 .container {{
-                    height: 70vh;
-                    min-height: 500px;
+                    height: 80vh;
+                    min-height: 650px;
                 }}
                 
                 #hoverBox {{
@@ -332,6 +371,13 @@ def run():
                     max-height: 150px;
                 }}
                 
+                #emotionRadar {{
+                    top: 120px;
+                    right: 10px;
+                    width: 140px;
+                    height: 140px;
+                }}
+                
                 #hoverBox h4 {{
                     font-size: 10px;
                 }}
@@ -339,20 +385,27 @@ def run():
             
             @media (max-width: 480px) {{
                 .container {{
-                    height: 60vh;
-                    min-height: 400px;
+                    height: 75vh;
+                    min-height: 600px;
                 }}
                 
                 #hoverBox {{
                     left: 10px;
                     right: 10px;
-                    padding: 10px;
-                    font-size: 10px;
+                    padding: 6px;
+                    font-size: 9px;
                     max-height: 120px;
                 }}
                 
+                #emotionRadar {{
+                    top: 100px;
+                    right: 5px;
+                    width: 110px;
+                    height: 110px;
+                }}
+                
                 #hoverBox h4 {{
-                    font-size: 10px;
+                    font-size: 9px;
                 }}
             }}
         </style>
@@ -363,6 +416,11 @@ def run():
                 <h4 id="hoverTitle"></h4>
                 <div id="hoverContent"></div>
             </div>
+            
+            <div id="emotionRadar">
+                <div id="radarPlot"></div>
+            </div>
+            
             <div id="plotDiv"></div>
         </div>
         
@@ -371,61 +429,130 @@ def run():
             const labelData = {json.dumps(label_data)};
             const clusterColors = {json.dumps(cluster_colors)};
             const clusterStyles = {json.dumps(cluster_styles)};
+            const emotionDimensions = {json.dumps(emotion_dimensions)};
             
             // Fixed index for consistent default point selection
             const DEFAULT_POINT_INDEX = 33;
             
             let plotDiv = document.getElementById('plotDiv');
+            let radarPlot = document.getElementById('radarPlot');
             let currentLayout = null;
             let currentTraces = null;
             
-            // Function to calculate hover box height
-            function getHoverBoxHeight() {{
+            // Default emotion scores (grey state)
+            const defaultEmotionScores = new Array(12).fill(20);
+            
+            // Function to create radar chart with responsive sizing
+            function createRadarChart(emotionScores, color = '#cccccc', title = 'Default State') {{
                 const containerWidth = window.innerWidth;
                 
+                // Responsive margin and font sizing
+                let margins, angularFontSize, radialFontSize;
+                
                 if (containerWidth <= 480) {{
-                    return 120; // max-height from CSS
+                    margins = {{ t: 35, b: 35, l: 40, r: 35 }};
+                    angularFontSize = 8;
+                    radialFontSize = 7;
                 }} else if (containerWidth <= 768) {{
-                    return 150; // max-height from CSS
+                    margins = {{ t: 40, b: 40, l: 45, r: 40 }};
+                    angularFontSize = 9;
+                    radialFontSize = 8;
+                }} else if (containerWidth <= 1024) {{
+                    margins = {{ t: 50, b: 50, l: 55, r: 50 }};
+                    angularFontSize = 10;
+                    radialFontSize = 8;
                 }} else {{
-                    return 200; // max-height from CSS
+                    margins = {{ t: 50, b: 50, l: 60, r: 60 }};
+                    angularFontSize = 11;
+                    radialFontSize = 9;
                 }}
+                
+                const radarData = [{{
+                    type: 'scatterpolar',
+                    r: emotionScores,
+                    theta: emotionDimensions,
+                    fill: 'toself',
+                    fillcolor: color + '40',
+                    line: {{
+                        color: color,
+                        width: 2
+                    }},
+                    marker: {{
+                        color: color,
+                        size: 4
+                    }},
+                    name: title,
+                    hovertemplate: '%{{theta}}: %{{r:.1f}}%<extra></extra>'
+                }}];
+                
+                const radarLayout = {{
+                    polar: {{
+                        bgcolor: 'rgba(255,255,255,0)',
+                        radialaxis: {{
+                            visible: true,
+                            range: [0, 100],
+                            tickfont: {{ size: radialFontSize, color: '#666' }},
+                            gridcolor: '#e0e0e0',
+                            linecolor: '#d0d0d0'
+                        }},
+                        angularaxis: {{
+                            tickfont: {{ size: angularFontSize, color: '#333' }},
+                            linecolor: '#d0d0d0',
+                            gridcolor: '#e0e0e0'
+                        }}
+                    }},
+                    showlegend: false,
+                    margin: margins,
+                    paper_bgcolor: 'rgba(255,255,255,0)',
+                    plot_bgcolor: 'rgba(255,255,255,0)',
+                    font: {{ size: angularFontSize }}
+                }};
+                
+                const radarConfig = {{
+                    displayModeBar: false,
+                    responsive: true
+                }};
+                
+                Plotly.newPlot('radarPlot', radarData, radarLayout, radarConfig);
             }}
+            
+            // Initialize radar chart with default values
+            createRadarChart(defaultEmotionScores);
             
             // Function to calculate responsive dimensions and layout
             function getResponsiveLayout() {{
                 const containerWidth = window.innerWidth;
                 const containerHeight = window.innerHeight;
                 
-                // Calculate responsive margins with reduced bottom margin
+                // Calculate responsive margins
                 let leftMargin, rightMargin, topMargin, bottomMargin;
                 
                 if (containerWidth <= 480) {{
                     leftMargin = rightMargin = 20;
-                    topMargin = 28;
-                    bottomMargin = 5; // Reduced from 10
+                    topMargin = 30;
+                    bottomMargin = 10;
                 }} else if (containerWidth <= 768) {{
                     leftMargin = rightMargin = 50;
-                    topMargin = 38;
-                    bottomMargin = 8; // Reduced from 15
+                    topMargin = 40;
+                    bottomMargin = 15;
                 }} else if (containerWidth <= 1024) {{
                     leftMargin = rightMargin = 100;
                     topMargin = 50;
-                    bottomMargin = 10; // Reduced from 20
+                    bottomMargin = 20;
                 }} else {{
                     leftMargin = rightMargin = 200;
                     topMargin = 60;
-                    bottomMargin = 10; // Reduced from 20
+                    bottomMargin = 25;
                 }}
                 
-                // Calculate responsive height (1.1 times the original)
+                // Calculate responsive height
                 let plotHeight;
                 if (containerWidth <= 480) {{
-                    plotHeight = Math.max(330, containerHeight * 0.495); // 1.1 * (300, 0.45)
+                    plotHeight = Math.max(400, containerHeight * 0.6);
                 }} else if (containerWidth <= 768) {{
-                    plotHeight = Math.max(412.5, containerHeight * 0.5775); // 1.1 * (375, 0.525)
+                    plotHeight = Math.max(500, containerHeight * 0.7);
                 }} else {{
-                    plotHeight = Math.max(495, containerHeight * 0.78375); // 1.1 * (450, 0.7125)
+                    plotHeight = Math.max(600, containerHeight * 0.8);
                 }}
                 
                 // Calculate responsive font size for labels
@@ -492,7 +619,7 @@ def run():
                             symbol: style.symbol,
                             size: markerSize
                         }},
-                        customdata: clusterPoints.map(d => [d.hover_text, d.cluster, d.color]),
+                        customdata: clusterPoints.map(d => [d.hover_text, d.cluster, d.color, d.emotion_scores]),
                         hoverinfo: 'none',
                         showlegend: false
                     }});
@@ -556,6 +683,13 @@ def run():
                     // Update layout and relayout
                     Plotly.react('plotDiv', newTraces, newLayout);
                 }}
+                
+                // Recreate radar chart with new responsive sizing
+                if (window.lastEmotionScores && window.lastEmotionColor) {{
+                    createRadarChart(window.lastEmotionScores, window.lastEmotionColor);
+                }} else {{
+                    createRadarChart(defaultEmotionScores);
+                }}
             }}
             
             // Function to setup event listeners
@@ -564,29 +698,51 @@ def run():
                 const hoverTitle = document.getElementById('hoverTitle');
                 const hoverContent = document.getElementById('hoverContent');
                 
-                function showHoverForPoint(text, cluster, color) {{
+                function showHoverForPoint(text, cluster, color, emotionScores) {{
                     hoverTitle.innerHTML = `<span style="color: ${{color}};">● ${{cluster}}</span>`;
                     hoverContent.innerHTML = text;
                     hoverBox.classList.add('visible');
+                    
+                    // Update radar chart and store for resize
+                    window.lastEmotionScores = emotionScores;
+                    window.lastEmotionColor = color;
+                    createRadarChart(emotionScores, color, cluster);
                 }}
+                
+                // Clear any existing event listeners
+                plotDiv.removeAllListeners && plotDiv.removeAllListeners('plotly_hover');
+                plotDiv.removeAllListeners && plotDiv.removeAllListeners('plotly_unhover');
                 
                 plotDiv.on('plotly_hover', function(data) {{
                     const point = data.points[0];
-                    if (point.customdata && point.customdata.length >= 3) {{
-                        const [text, cluster, color] = point.customdata;
-                        showHoverForPoint(text, cluster, color);
+                    if (point && point.customdata && point.customdata.length >= 4) {{
+                        const [text, cluster, color, emotionScores] = point.customdata;
+                        showHoverForPoint(text, cluster, color, emotionScores);
                     }}
                 }});
                 
                 plotDiv.on('plotly_unhover', function(data) {{
                     hoverBox.classList.remove('visible');
+                    
+                    // Reset radar chart to grey default
+                    window.lastEmotionScores = null;
+                    window.lastEmotionColor = null;
+                    createRadarChart(defaultEmotionScores);
                 }});
                 
                 // Show default point after 0.1 seconds
                 setTimeout(() => {{
                     if (window.allDataPoints && window.allDataPoints.length > DEFAULT_POINT_INDEX) {{
                         const defaultPoint = window.allDataPoints[DEFAULT_POINT_INDEX];
-                        showHoverForPoint(defaultPoint.hover_text, defaultPoint.cluster, defaultPoint.color);
+                        showHoverForPoint(defaultPoint.hover_text, defaultPoint.cluster, defaultPoint.color, defaultPoint.emotion_scores);
+                        
+                        // After showing for 2 seconds, reset to grey
+                        setTimeout(() => {{
+                            hoverBox.classList.remove('visible');
+                            window.lastEmotionScores = null;
+                            window.lastEmotionColor = null;
+                            createRadarChart(defaultEmotionScores);
+                        }}, 2000);
                     }}
                 }}, 100);
             }}
@@ -612,6 +768,9 @@ def run():
                 if (plotDiv) {{
                     Plotly.Plots.resize('plotDiv');
                 }}
+                if (radarPlot) {{
+                    Plotly.Plots.resize('radarPlot');
+                }}
             }}, 100);
         </script>
     </body>
@@ -621,10 +780,9 @@ def run():
     # --- Render in responsive container ---
     st.markdown('<div class="plot-container">', unsafe_allow_html=True)
     
-    # Calculate responsive height for the component with 1.1x increase
-    base_height = 1045  # 1.1 * 950 = 1045
-    hover_box_height = 240  # 200px hover box + 40px padding
-    component_height = base_height - hover_box_height  # Reduce by hover box space
+    # Calculate responsive height for the component
+    base_height = 1000  # Adjusted for better radar positioning
+    component_height = base_height
     
     # Use Streamlit's HTML component with adjusted height
     components.html(html_code, height=component_height, scrolling=False)

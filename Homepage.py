@@ -362,7 +362,7 @@ st.markdown("""
 <div class="hero-title">🧭 MindSpace OS</div>
 <div class="hero-subtitle">
     Explore interlinked visualizations revealing emotions felt, themes emerged & intertwined, and challenges shared 
-    by 2,977 Reddit posts and comments on "Meditation" from Jan 2024 to June 2025.
+    of 2,977 Reddit posts and comments on "Meditation" from Jan 2024 to June 2025.
 </div>
 """, unsafe_allow_html=True)
 
